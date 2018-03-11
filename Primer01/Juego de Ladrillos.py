@@ -10,6 +10,7 @@ color_fondo=(0,0,64) #color de fondo
 
 #clase nueva bolita
 class Bolita(pygame.sprite.Sprite):
+    #Constructor
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         #Cargar imagen
@@ -22,16 +23,24 @@ class Bolita(pygame.sprite.Sprite):
         #MOVIMIENTO DE LA BOLA
         self.speed = [4, 4]
 
-        #Funcion de actualizacion constante del objeto
+    #Funcion de actualizacion constante del objeto
 
     def update(self):
         #para evitar q se salga de la pantalla por abajo o por arriva
         if self.rect.bottom >= ALTO or self.rect.top <= 0:
-            self.speed[1]= -self.speed[1]
+            self.speed[1] = -self.speed[1]
         #para evitar que se salga de la pantalla por la derecha o por la izquierda
         elif self.rect.right >= ANCHO or self.rect.left <= 0:
             self.speed[0] = -self.speed[0]
         self.rect.move_ip(self.speed)
+#CLASE NUEVA DEL JUGADOR
+class Jugador(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load('Recursos/paleta.png')
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = (ANCHO/2, ALTO-20)
+        self.speed =[0, 0]
 
 
 
@@ -50,6 +59,7 @@ reloj=pygame.time.Clock()
 #INSTANCIAR CLASE BOLITA
 
 bolita = Bolita()
+jugador = Jugador()
 
 #buclee infinito para que no se cierre automaticamente la pantalla
 while True:
@@ -63,5 +73,6 @@ while True:
     bolita.update()
     pantalla.fill(color_fondo)
     pantalla.blit(bolita.image,bolita.rect)
+    pantalla.blit(jugador.image, jugador.rect)
     pygame.display.flip()
 
