@@ -33,8 +33,10 @@ class Bolita(pygame.sprite.Sprite):
         elif self.rect.right >= ANCHO or self.rect.left <= 0:
             self.speed[0] = -self.speed[0]
         self.rect.move_ip(self.speed)
+
+
 #CLASE NUEVA DEL JUGADOR
-class Jugador(pygame.sprite.Sprite):
+class Paleta(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('Recursos/paleta.png')
@@ -42,6 +44,16 @@ class Jugador(pygame.sprite.Sprite):
         self.rect.midbottom = (ANCHO/2, ALTO-20)
         self.speed =[0, 0]
 
+    def Update(self, evento):
+
+        if evento.key == pygame.K_LEFT and self.rect.left > 0:
+            self.speed = [-5, 0]
+        elif evento.key == pygame.K_RIGHT and self.rect.right < ANCHO:
+            self.speed = [5, 0]
+        else:
+            self.speed = [0, 0]
+
+        self.rect.move_ip(self.speed)
 
 
 #generar la pantalla con los dos datos anteriores
@@ -56,10 +68,14 @@ pygame.display.set_caption('Juego de Ladrillos')#titulo de la pantalla
 
 reloj=pygame.time.Clock()
 
+#RETASO DE PRESION DE LA TECLA
+
+pygame.key.set_repeat(30)
+
 #INSTANCIAR CLASE BOLITA
 
 bolita = Bolita()
-jugador = Jugador()
+jugador = Paleta()
 
 #buclee infinito para que no se cierre automaticamente la pantalla
 while True:
@@ -69,6 +85,9 @@ while True:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             sys.exit()
+        elif evento.type == pygame.KEYDOWN:
+            jugador.Update(evento)
+
     #llamando al metodo update
     bolita.update()
     pantalla.fill(color_fondo)
