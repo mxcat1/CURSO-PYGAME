@@ -55,6 +55,29 @@ class Paleta(pygame.sprite.Sprite):
 
         self.rect.move_ip(self.speed)
 
+#ladrillo del muro clase
+class Ladrillo(pygame.sprite.Sprite):
+    def __init__(self,posicion):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load('Recursos/ladrillo.png')
+        self.rect =self.image.get_rect()
+        self.rect.topleft = posicion
+
+class Muro(pygame.sprite.Group):
+    def __init__(self,cantidadladrillos):
+        pygame.sprite.Group.__init__(self)
+        pos_x = 0
+        pos_y = 20
+        for i in range(cantidadladrillos):
+            ladrillo = Ladrillo((pos_x,pos_y))
+            self.add(ladrillo)
+            pos_x += ladrillo.rect.width
+            if pos_x >= ANCHO:
+                pos_x = 0
+                pos_y += ladrillo.rect.height
+
+
+
 
 #generar la pantalla con los dos datos anteriores
 
@@ -76,6 +99,7 @@ pygame.key.set_repeat(30)
 
 bolita = Bolita()
 jugador = Paleta()
+muro = Muro(100)
 
 #buclee infinito para que no se cierre automaticamente la pantalla
 while True:
@@ -90,8 +114,15 @@ while True:
 
     #llamando al metodo update
     bolita.update()
+
+    #Coliciones
+    if pygame.sprite.collide_rect(bolita,jugador):
+        bolita.speed[1] = - bolita.speed[1]
+
+
     pantalla.fill(color_fondo)
     pantalla.blit(bolita.image,bolita.rect)
     pantalla.blit(jugador.image, jugador.rect)
+    muro.draw(pantalla)
     pygame.display.flip()
 
