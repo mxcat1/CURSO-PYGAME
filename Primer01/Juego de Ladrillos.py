@@ -119,6 +119,17 @@ while True:
     if pygame.sprite.collide_rect(bolita,jugador):
         bolita.speed[1] = - bolita.speed[1]
 
+    lista = pygame.sprite.spritecollide(bolita, muro, False)
+
+    if lista:
+        ladrillo = lista[0]
+        cx = bolita.rect.centerx
+        if cx < ladrillo.rect.left or cx > ladrillo.rect.right:
+            bolita.speed[0] = -bolita.speed[0]
+        else:
+            bolita.speed[1] = -bolita.speed[1]
+        muro.remove(ladrillo)
+
 
     pantalla.fill(color_fondo)
     pantalla.blit(bolita.image,bolita.rect)
