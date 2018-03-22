@@ -1,5 +1,6 @@
 #importar las librerias necesarias q se van a usar
 import sys
+import time
 import pygame
 
 #definir la resolucion de la pantalla del juego
@@ -7,6 +8,10 @@ import pygame
 ANCHO = 640
 ALTO = 420
 color_fondo=(0,0,64) #color de fondo
+
+#funcion nesesaria para usar las fuentes
+
+pygame.init()
 
 #clase nueva bolita
 class Bolita(pygame.sprite.Sprite):
@@ -27,7 +32,7 @@ class Bolita(pygame.sprite.Sprite):
 
     def update(self):
         #para evitar q se salga de la pantalla por abajo o por arriva
-        if self.rect.bottom >= ALTO or self.rect.top <= 0:
+        if self.rect.top <= 0:
             self.speed[1] = -self.speed[1]
         #para evitar que se salga de la pantalla por la derecha o por la izquierda
         elif self.rect.right >= ANCHO or self.rect.left <= 0:
@@ -47,9 +52,9 @@ class Paleta(pygame.sprite.Sprite):
     def Update(self, evento):
 
         if evento.key == pygame.K_LEFT and self.rect.left > 0:
-            self.speed = [-5, 0]
+            self.speed = [-8, 0]
         elif evento.key == pygame.K_RIGHT and self.rect.right < ANCHO:
-            self.speed = [5, 0]
+            self.speed = [8, 0]
         else:
             self.speed = [0, 0]
 
@@ -76,6 +81,18 @@ class Muro(pygame.sprite.Group):
                 pos_x = 0
                 pos_y += ladrillo.rect.height
 
+#Funcion llamada cuando sale la bolita por abajo
+
+def juego_terminado():
+    fuente = pygame.font.SysFont('Arial', 50)
+    texto = fuente.render('Juego Terminado :V', True, (255, 255, 255))
+    texto_rect = texto.get_rect()
+    texto_rect.center = [ANCHO / 2, ALTO / 2]
+    pantalla.blit(texto, texto_rect)
+    pygame.display.flip()
+    # Pausar 3 seg
+    time.sleep(3)
+    sys.exit()
 
 
 
@@ -129,6 +146,9 @@ while True:
         else:
             bolita.speed[1] = -bolita.speed[1]
         muro.remove(ladrillo)
+
+    if bolita.rect.top > ALTO:
+        juego_terminado()
 
 
     pantalla.fill(color_fondo)
