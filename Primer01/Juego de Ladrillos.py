@@ -8,6 +8,7 @@ import pygame
 ANCHO = 640
 ALTO = 420
 color_fondo=(0,0,64) #color de fondo
+color_blanco = (255,255,255)
 
 #funcion nesesaria para usar las fuentes
 
@@ -85,7 +86,7 @@ class Muro(pygame.sprite.Group):
 
 def juego_terminado():
     fuente = pygame.font.SysFont('Arial', 50)
-    texto = fuente.render('Juego Terminado :V', True, (255, 255, 255))
+    texto = fuente.render('Juego Terminado :V', True, color_blanco)
     texto_rect = texto.get_rect()
     texto_rect.center = [ANCHO / 2, ALTO / 2]
     pantalla.blit(texto, texto_rect)
@@ -93,7 +94,13 @@ def juego_terminado():
     # Pausar 3 seg
     time.sleep(3)
     sys.exit()
-
+#funcion para mostrar el puntaje
+def mostrar_puntaje():
+    fuente = pygame.font.SysFont('Consolas', 30)
+    texto = fuente.render(str(puntuacion), True, color_blanco)
+    texto_rect = texto.get_rect()
+    texto_rect.topleft = [0, 0]
+    pantalla.blit(texto, texto_rect)
 
 
 #generar la pantalla con los dos datos anteriores
@@ -117,6 +124,8 @@ pygame.key.set_repeat(30)
 bolita = Bolita()
 jugador = Paleta()
 muro = Muro(100)
+#PUNTUACION
+puntuacion = 0
 
 #buclee infinito para que no se cierre automaticamente la pantalla
 while True:
@@ -146,12 +155,15 @@ while True:
         else:
             bolita.speed[1] = -bolita.speed[1]
         muro.remove(ladrillo)
+        puntuacion +=10
 
     if bolita.rect.top > ALTO:
         juego_terminado()
 
 
     pantalla.fill(color_fondo)
+    #Mostrar puntuacion
+    mostrar_puntaje()
     pantalla.blit(bolita.image,bolita.rect)
     pantalla.blit(jugador.image, jugador.rect)
     muro.draw(pantalla)
