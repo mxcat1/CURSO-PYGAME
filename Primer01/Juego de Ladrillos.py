@@ -60,15 +60,13 @@ class Paleta(pygame.sprite.Sprite):
             self.speed = [0, 0]
 
         self.rect.move_ip(self.speed)
-
-#ladrillo del muro clase
+# ladrillo del muro clase
 class Ladrillo(pygame.sprite.Sprite):
     def __init__(self,posicion):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('Recursos/ladrillo.png')
         self.rect =self.image.get_rect()
         self.rect.topleft = posicion
-
 class Muro(pygame.sprite.Group):
     def __init__(self,cantidadladrillos):
         pygame.sprite.Group.__init__(self)
@@ -81,9 +79,7 @@ class Muro(pygame.sprite.Group):
             if pos_x >= ANCHO:
                 pos_x = 0
                 pos_y += ladrillo.rect.height
-
-#Funcion llamada cuando sale la bolita por abajo
-
+# Funcion llamada cuando sale la bolita por abajo
 def juego_terminado():
     fuente = pygame.font.SysFont('Arial', 50)
     texto = fuente.render('Juego Terminado :V', True, color_blanco)
@@ -101,47 +97,37 @@ def mostrar_puntaje():
     texto_rect = texto.get_rect()
     texto_rect.topleft = [0, 0]
     pantalla.blit(texto, texto_rect)
-
-
-#generar la pantalla con los dos datos anteriores
-
+# generar la pantalla con los dos datos anteriores
 pantalla = pygame.display.set_mode((ANCHO,ALTO))
-
-#configurar caracteristicas de la pantalla
+# configurar caracteristicas de la pantalla
 
 pygame.display.set_caption('Juego de Ladrillos')#titulo de la pantalla
-
-#RELOJ DE FRAMES
+# RELOJ DE FRAMES
 
 reloj=pygame.time.Clock()
-
-#RETASO DE PRESION DE LA TECLA
+# RETASO DE PRESION DE LA TECLA
 
 pygame.key.set_repeat(30)
-
-#INSTANCIAR CLASE BOLITA
+# INSTANCIAR CLASE BOLITA
 
 bolita = Bolita()
 jugador = Paleta()
 muro = Muro(100)
-#PUNTUACION
+# PUNTUACION
 puntuacion = 0
-
-#buclee infinito para que no se cierre automaticamente la pantalla
+# buclee infinito para que no se cierre automaticamente la pantalla
 while True:
-    #Cantidada de Frames
+    # Cantidada de Frames
     reloj.tick(60)
-    #bucle for para controlar eventos
+    # bucle for para controlar eventos
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             sys.exit()
         elif evento.type == pygame.KEYDOWN:
             jugador.Update(evento)
-
-    #llamando al metodo update
+    # llamando al metodo update
     bolita.update()
-
-    #Coliciones
+    # Coliciones
     if pygame.sprite.collide_rect(bolita,jugador):
         bolita.speed[1] = - bolita.speed[1]
 
@@ -159,10 +145,8 @@ while True:
 
     if bolita.rect.top > ALTO:
         juego_terminado()
-
-
     pantalla.fill(color_fondo)
-    #Mostrar puntuacion
+    # Mostrar puntuacion
     mostrar_puntaje()
     pantalla.blit(bolita.image,bolita.rect)
     pantalla.blit(jugador.image, jugador.rect)
